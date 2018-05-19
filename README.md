@@ -32,7 +32,7 @@ $ lsmod |grep hang_panic
 ```
 ### Read Help
 ```
-$ cat /proc/hang_panic 
+# cat /proc/hang_panic 
 <<Hang&Panic module>>
 'echo c > /proc/hang_panic' >>> panic
 'echo h > /proc/hang_panic' >>> hang(disable local irq and preempt)
@@ -41,16 +41,16 @@ $ cat /proc/hang_panic
 ### Cause Hang condition
 (a)Lock LocalIRQ and preemption(Can not ping, probably).
 ```
-echo h > /proc/hang_panic
+# echo h > /proc/hang_panic
 ```
 (b)Lock only LocalIRQ(Can ping)
 ```
-echo h > /proc/hang_panic
+# echo h > /proc/hang_panic
 ```
 ### Cause Panic condition
 This behavior is similar to `echo c > /proc/sysrq-trigger`.
 ```
-echo c > /proc/hang_panic
+# echo c > /proc/hang_panic
 ```
 ### Remove the module
 ```
