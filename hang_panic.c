@@ -116,23 +116,23 @@ static const struct file_operations panic_hang_proc_fops = {
 
 
 /* module initialize & remove */
-static int __init panic_and_hang_init( void )
+static int __init hang_and_panic_init( void )
 {
     printk( KERN_INFO "Install panic&hang test module\n");
 
     /* add proc */    
-    proc_create(PROC_NAME, S_IRUGO|S_IWUGO, NULL, &panic_hang_proc_fops);
+    proc_create(PROC_NAME, S_IRUSR|S_IWUSR, NULL, &panic_hang_proc_fops);
 
     return 0;
 }
 
-static void __exit panic_and_hang_exit( void )
+static void __exit hang_and_panic_exit( void )
 {
     printk( KERN_INFO "Uninstall panic&hang test module\n");
     remove_proc_entry(PROC_NAME, NULL);
 
 }
 
-module_init( panic_and_hang_init );
-module_exit( panic_and_hang_exit );
+module_init( hang_and_panic_init );
+module_exit( hang_and_panic_exit );
 
