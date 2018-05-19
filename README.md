@@ -1,5 +1,5 @@
 # Hang and Panic kernel module for Test
-hang_and_panic module causes a hang condition or a panic condition.
+hang_and_panic module causes a hang condition or a panic condition.  
 This module is assumed to be used for TESTING purposes.
 ## Installation
 ### Required packages for build
@@ -14,4 +14,10 @@ sudo yum -y install git gcc kernel-devel
 ```
 Clone Git repository
 ```
-
+git clone https://github.com/Noppy/HangAndPanicKernelModule.git
+cd HangAndPanicKernelModule/
+```
+Make kernel Module, so buile 
+```
+Make
+```

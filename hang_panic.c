@@ -1,5 +1,5 @@
 /*
- * Panic and hung module for linux
+ * Hang&Panic module for linux
  *
  * Copyright (c) 2018 n.fujita
  *
@@ -13,10 +13,10 @@
 #include <linux/seq_file.h>
 
 /* Module information */
-MODULE_DESCRIPTION( "panic and hung" );
+MODULE_DESCRIPTION( "hang and panic" );
 MODULE_LICENSE( "MIT" );
-#define MODULE_NAME "panic hung module"
-#define PROC_NAME   "panic_hung"
+#define MODULE_NAME "hang_panic module"
+#define PROC_NAME   "hang_panic"
 
 static char message[64] = {0};
 
@@ -27,9 +27,9 @@ void test_panic(void)
     panic("Panic via Panic&Hung test module");
 }
 
-void test_hung_hard(void)
+void test_hang_hard(void)
 {
-    printk( KERN_INFO "hung test(disable local irq and preempt)\n");
+    printk( KERN_INFO "Hang test(disable local irq and preempt)\n");
 
     local_irq_disable();
     preempt_disable();
@@ -41,9 +41,9 @@ void test_hung_hard(void)
 
 }
 
-void test_hung_soft(void)
+void test_hang_soft(void)
 {
-    printk( KERN_INFO "hung test(disable only local irq)\n");
+    printk( KERN_INFO "Hang test(disable only local irq)\n");
 
     local_irq_disable();
 
@@ -55,16 +55,16 @@ void test_hung_soft(void)
 
 
 /* proc functions */
-static int panic_hung_show(struct seq_file *m, void *v)
+static int panic_hang_show(struct seq_file *m, void *v)
 {
-    seq_printf(m, "<<panic and hung module>>\n");
+    seq_printf(m, "<<Hang&Panic module>>\n");
     seq_printf(m, "\'echo c > /proc/%s\' >>> panic\n", PROC_NAME);
-    seq_printf(m, "\'echo h > /proc/%s\' >>> hung(disable local irq and preempt)\n", PROC_NAME);
-    seq_printf(m, "\'echo H > /proc/%s\' >>> hung(disable only local irq)\n", PROC_NAME);
+    seq_printf(m, "\'echo h > /proc/%s\' >>> hang(disable local irq and preempt)\n", PROC_NAME);
+    seq_printf(m, "\'echo H > /proc/%s\' >>> hang(disable only local irq)\n", PROC_NAME);
     return 0;
 }
 
-static ssize_t panic_hung_write(struct file *filp, const char __user *buff, size_t user_len, loff_t *offset )
+static ssize_t panic_hang_write(struct file *filp, const char __user *buff, size_t user_len, loff_t *offset )
 {
     size_t len = 0;
 
@@ -86,11 +86,11 @@ static ssize_t panic_hung_write(struct file *filp, const char __user *buff, size
         break;
 
       case 'h':
-        test_hung_hard();
+        test_hang_hard();
         break;
 
       case 'H':
-        test_hung_soft();
+        test_hang_soft();
         break;
 
       default:
@@ -100,39 +100,39 @@ static ssize_t panic_hung_write(struct file *filp, const char __user *buff, size
     return user_len;
 }
 
-static int panic_hung_open(struct inode *inode, struct file *file)
+static int panic_hang_open(struct inode *inode, struct file *file)
 {
-    return single_open(file, panic_hung_show, NULL);
+    return single_open(file, panic_hang_show, NULL);
 }
 
-static const struct file_operations panic_hung_proc_fops = {
+static const struct file_operations panic_hang_proc_fops = {
     .owner   = THIS_MODULE,
-    .open    = panic_hung_open,
+    .open    = panic_hang_open,
     .read    = seq_read,
     .llseek  = seq_lseek,
     .release = single_release,
-    .write   = panic_hung_write,
+    .write   = panic_hang_write,
 };
 
 
 /* module initialize & remove */
-static int __init panic_and_hung_init( void )
+static int __init panic_and_hang_init( void )
 {
-    printk( KERN_INFO "Install panic&hung test module\n");
+    printk( KERN_INFO "Install panic&hang test module\n");
 
     /* add proc */    
-    proc_create(PROC_NAME, S_IRUGO|S_IWUGO, NULL, &panic_hung_proc_fops);
+    proc_create(PROC_NAME, S_IRUGO|S_IWUGO, NULL, &panic_hang_proc_fops);
 
     return 0;
 }
 
-static void __exit panic_and_hung_exit( void )
+static void __exit panic_and_hang_exit( void )
 {
-    printk( KERN_INFO "Uninstall panic&hung test module\n");
+    printk( KERN_INFO "Uninstall panic&hang test module\n");
     remove_proc_entry(PROC_NAME, NULL);
 
 }
 
-module_init( panic_and_hung_init );
-module_exit( panic_and_hung_exit );
+module_init( panic_and_hang_init );
+module_exit( panic_and_hang_exit );
 

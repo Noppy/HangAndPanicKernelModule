@@ -1,4 +1,4 @@
-obj-m := panic_hung.o
+obj-m := hang_panic.o
 
 KDIR  := /lib/modules/$(shell uname -r)/build
 PWD   := $(shell pwd)
