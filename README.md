@@ -25,12 +25,12 @@ $ ls *.ko
 hang_panic.ko
 ```
 ## Usage
-### (1)Install the module
+### Install the module
 ```
 $ sudo insmod hang_panic.ko
 $ lsmod |grep hang_panic
 ```
-### (2)Read Help
+### Read Help
 ```
 $ cat /proc/hang_panic 
 <<Hang&Panic module>>
@@ -38,7 +38,7 @@ $ cat /proc/hang_panic
 'echo h > /proc/hang_panic' >>> hang(disable local irq and preempt)
 'echo H > /proc/hang_panic' >>> hang(disable only local irq)
 ```
-### (3)Cause Hang condition
+### Cause Hang condition
 (a)Lock LocalIRQ and preemption(Can not ping, probably).
 ```
 echo h > /proc/hang_panic
@@ -47,12 +47,12 @@ echo h > /proc/hang_panic
 ```
 echo h > /proc/hang_panic
 ```
-### (4)Cause Panic condition
+### Cause Panic condition
 This behavior is similar to `echo c > /proc/sysrq-trigger`.
 ```
 echo c > /proc/hang_panic
 ```
-### (5)Remove the module
+### Remove the module
 ```
 $ sudo rmmod hang_panic
 ```
