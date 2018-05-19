@@ -11,14 +11,13 @@
 #include <linux/kernel.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
+#include <linux/uaccess.h>
 
 /* Module information */
 MODULE_DESCRIPTION( "hang and panic" );
 MODULE_LICENSE( "MIT" );
 #define MODULE_NAME "hang_panic module"
 #define PROC_NAME   "hang_panic"
-
-static char message[64] = {0};
 
 /* main function */
 void test_panic(void)
@@ -64,37 +63,34 @@ static int panic_hang_show(struct seq_file *m, void *v)
     return 0;
 }
 
-static ssize_t panic_hang_write(struct file *filp, const char __user *buff, size_t user_len, loff_t *offset )
+static ssize_t panic_hang_write(struct file *file, const char __user *buff, size_t user_len, loff_t *ppos )
 {
-    size_t len = 0;
 
-    if( 0 != *offset){
-        return -EINVAL;
-    }
-    memset(message, 0, sizeof(message));
+    if ( user_len ){
+        char c;
 
-    len = user_len > sizeof(message) ? sizeof(message) : user_len;
+        if( get_user(c, buff)){
+            return -EFAULT;
+        }
+        printk(KERN_INFO "%c\n", c);
 
-    memcpy( message, buff, len );
-    message[len-1] = '\n';
-    printk(KERN_INFO "%s\n", message);
+        /* check message */
+        switch( c ){
+          case 'c':
+            test_panic();
+            break;
 
-    /* check message */
-    switch( message[0] ){
-      case 'c':
-        test_panic();
-        break;
+          case 'h':
+            test_hang_hard();
+            break;
 
-      case 'h':
-        test_hang_hard();
-        break;
+          case 'H':
+            test_hang_soft();
+            break;
 
-      case 'H':
-        test_hang_soft();
-        break;
-
-      default:
-        break;
+          default:
+            break;
+        } 
     }
 
     return user_len;
