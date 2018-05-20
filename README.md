@@ -39,11 +39,11 @@ $ lsmod |grep hang_panic
 'echo H > /proc/hang_panic' >>> hang(disable only local irq)
 ```
 ### Cause Hang condition
-(a)Lock LocalIRQ and preemption(Can not ping, probably).
+(a)Lock preemption and currently core's LocalIRQ(Can not ping, probably).
 ```
 # echo h > /proc/hang_panic
 ```
-(b)Lock only LocalIRQ(Can ping)
+(b)Lock only currently core's LocalIRQ(Can ping)
 ```
 # echo h > /proc/hang_panic
 ```
