@@ -45,7 +45,7 @@ $ lsmod |grep hang_panic
 ```
 (b)Lock only currently core's LocalIRQ(Can ping)
 ```
-# echo h > /proc/hang_panic
+# echo H > /proc/hang_panic
 ```
 ### Cause Panic condition
 This behavior is similar to `echo c > /proc/sysrq-trigger`.
